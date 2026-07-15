@@ -1,0 +1,32 @@
+{
+  "name": "a2z-forge",
+  "version": "0.1.0",
+  "description": "An autonomous product foundry for Claude Code and compatible coding agents.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "forge": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "tsx cli/index.ts",
+    "doctor": "tsx cli/index.ts doctor",
+    "validate:plugin": "claude plugin validate .",
+    "secret-scan": "bash scripts/secret-scan.sh"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.14",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}

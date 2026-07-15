@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "a2z-forge",
+  "displayName": "A2Z FORGE",
+  "version": "0.1.0",
+  "description": "An autonomous product foundry for Claude Code and compatible coding agents.",
+  "author": {
+    "name": "A2Z FORGE contributors"
+  },
+  "license": "MIT",
+  "keywords": ["product-development", "orchestration", "research", "design", "quality"],
+  "hooks": "./hooks/hooks.json",
+  "defaultEnabled": true,
+  "userConfig": {
+    "permission_mode": {
+      "type": "string",
+      "title": "Permission mode",
+      "description": "Default operating boundary: observe, build, connected-build, or autopilot.",
+      "default": "build"
+    },
+    "agent_limit": {
+      "type": "number",
+      "title": "Agent limit",
+      "description": "Maximum concurrent workers used by A2Z FORGE.",
+      "default": 3,
+      "min": 1,
+      "max": 16
+    },
+    "reserve_percent": {
+      "type": "number",
+      "title": "Usage reserve",
+      "description": "Percentage of estimated capacity held for integration and critical fixes.",
+      "default": 20,
+      "min": 0,
+      "max": 90
+    }
+  }
+}

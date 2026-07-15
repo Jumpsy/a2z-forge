@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+.forge/
+*.log
+.DS_Store
+evals/artifacts/
+examples/**/.forge/

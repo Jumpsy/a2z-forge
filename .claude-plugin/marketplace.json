@@ -1,0 +1,19 @@
+{
+  "name": "a2z-forge",
+  "owner": {
+    "name": "A2Z FORGE contributors"
+  },
+  "metadata": {
+    "description": "Open-source autonomous product-development workflows for Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "a2z-forge",
+      "source": "./plugin",
+      "description": "Idea in. Production out. Research, design, build, critique, test, explain, and ship through one coordinated system.",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": ["product-development", "orchestration", "research", "quality"]
+    }
+  ]
+}
