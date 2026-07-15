@@ -1,6 +1,6 @@
 # Environment Report
 
-Captured 2026-07-15 in `/Users/jacobhurvitz/agent-workspace`.
+Captured 2026-07-15 in the maintainer's local workspace. Personal paths and credentials are intentionally omitted.
 
 ## Runtimes
 

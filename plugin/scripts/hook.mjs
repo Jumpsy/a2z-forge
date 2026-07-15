@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { appendFile, access, readFile } from "node:fs/promises";
+import { appendFile, access, mkdir, readFile, rm, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 
@@ -9,6 +9,7 @@ const cwd = typeof input.cwd === "string" ? input.cwd : process.cwd();
 const stateDirectory = join(cwd, ".forge");
 const statePath = join(stateDirectory, "PROJECT_STATE.json");
 const journalPath = join(stateDirectory, "SESSION_JOURNAL.jsonl");
+const journalLockPath = join(stateDirectory, ".journal.lock");
 
 if (action === "pre-tool-security") {
   const command = typeof input.tool_input?.command === "string" ? input.tool_input.command : "";
@@ -40,17 +41,19 @@ const eventType = {
 }[action];
 
 if (eventType) {
-  const sequence = await nextSequence(journalPath);
-  const event = {
-    schemaVersion: 1,
-    sequence,
-    eventId: randomUUID(),
-    timestamp: new Date().toISOString(),
-    type: eventType,
-    actor: "claude-hook",
-    payload: { hookEvent: input.hook_event_name ?? action },
-  };
-  await appendFile(journalPath, `${JSON.stringify(event)}\n`, { encoding: "utf8", mode: 0o600 });
+  await withJournalLock(async () => {
+    const sequence = await nextSequence(journalPath);
+    const event = {
+      schemaVersion: 1,
+      sequence,
+      eventId: randomUUID(),
+      timestamp: new Date().toISOString(),
+      type: eventType,
+      actor: "claude-hook",
+      payload: { hookEvent: String(input.hook_event_name ?? action) },
+    };
+    await appendFile(journalPath, `${JSON.stringify(event)}\n`, { encoding: "utf8", mode: 0o600 });
+  });
 }
 
 async function readStdinJson() {
@@ -74,12 +77,33 @@ async function nextSequence(path) {
 }
 
 function blockedReason(command) {
+  const normalized = command.replace(/["']/g, " ").replace(/\s+/g, " ");
   const rules = [
-    [/\brm\s+-[^\n]*r[^\n]*f[^\n]*\s+(\/|~|\$HOME)(\s|$)/i, "recursive deletion of a home or root path"],
+    [/\brm\b(?=[^;&|]*(?:\s-r\b|\s-[a-z]*r[a-z]*\b))(?=[^;&|]*(?:\s-f\b|\s-[a-z]*f[a-z]*\b))[^;&|]*\s(?:\/|~|\$HOME)(?:\S*)?(?:\s|$)/i, "recursive deletion of an absolute, home, or root path"],
     [/\bgit\s+reset\s+--hard\b/i, "destructive Git reset"],
     [/\bgit\s+clean\s+-[^\n]*f/i, "destructive Git clean"],
     [/\b(curl|wget)\b[^\n|]*\|\s*(sh|bash|zsh)\b/i, "unverified network content piped to a shell"],
-    [/\bchmod\s+-R\s+777\b/i, "recursive world-writable permissions"],
+    [/\b(curl|wget)\b[^\n]*(?:&&|;)\s*(sh|bash|zsh)\b/i, "download followed by shell execution"],
+    [/\bchmod\s+-R\s+(?:666|777)\b/i, "recursive unsafe permissions"],
   ];
-  return rules.find(([pattern]) => pattern.test(command))?.[1];
+  return rules.find(([pattern]) => pattern.test(normalized))?.[1];
+}
+
+async function withJournalLock(operation) {
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    try {
+      await mkdir(journalLockPath, { mode: 0o700 });
+      try { return await operation(); }
+      finally { await rm(journalLockPath, { recursive: true, force: true }); }
+    } catch (error) {
+      if (error?.code !== "EEXIST") throw error;
+      const details = await stat(journalLockPath).catch(() => undefined);
+      if (details && Date.now() - details.mtimeMs > 30_000) {
+        await rm(journalLockPath, { recursive: true, force: true });
+        continue;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    }
+  }
+  throw new Error(`Timed out acquiring journal lock: ${journalLockPath}`);
 }

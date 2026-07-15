@@ -1,0 +1,7 @@
+Cellular respiration is the process cells use to convert chemical energy in glucose into ATP, the molecule that powers cellular work. In eukaryotic cells, glycolysis begins in the cytoplasm and splits one glucose molecule into two pyruvate molecules.
+
+When oxygen is available, pyruvate enters the mitochondrion. The citric acid cycle transfers high-energy electrons to NADH and FADH2 while releasing carbon dioxide.
+
+The electron transport chain uses those electrons to pump protons across the inner mitochondrial membrane. The resulting proton gradient drives ATP synthase, which produces most of the ATP generated during aerobic respiration.
+
+Oxygen acts as the final electron acceptor and combines with electrons and hydrogen ions to form water. Without oxygen, the electron transport chain stops and cells may use fermentation to regenerate NAD+ so glycolysis can continue.

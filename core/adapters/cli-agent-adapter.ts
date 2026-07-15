@@ -2,12 +2,14 @@ import { randomUUID } from "node:crypto";
 import { spawn } from "node:child_process";
 import { access } from "node:fs/promises";
 import { constants } from "node:fs";
+import { delimiter, join } from "node:path";
 import type { AgentAdapter, AgentCapability, AgentResult, AgentTask } from "./agent-adapter.js";
 
 type Run = {
   status: "queued" | "running" | "completed" | "blocked" | "failed" | "stopped";
   result?: AgentResult;
   child?: ReturnType<typeof spawn>;
+  task: AgentTask;
 };
 
 export class CliAgentAdapter implements AgentAdapter {
@@ -24,17 +26,24 @@ export class CliAgentAdapter implements AgentAdapter {
   }
 
   async available(): Promise<boolean> {
-    const paths = (process.env.PATH ?? "").split(":");
-    return (await Promise.all(paths.map(async (path) => {
-      try { await access(`${path}/${this.executable}`, constants.X_OK); return true; } catch { return false; }
-    }))).some(Boolean);
+    return Boolean(await resolveExecutable(this.executable));
   }
 
   async start(task: AgentTask): Promise<{ runId: string }> {
     const runId = randomUUID();
-    const run: Run = { status: "running" };
+    const run: Run = { status: "queued", task };
     this.#runs.set(runId, run);
-    const child = spawn(this.executable, this.buildArguments(task), { stdio: ["ignore", "pipe", "pipe"] });
+    await this.startProcess(run, task);
+    return { runId };
+  }
+
+  private async startProcess(run: Run, task: AgentTask): Promise<void> {
+    const executable = await resolveExecutable(this.executable);
+    if (!executable) throw new Error(`Agent executable not found: ${this.executable}`);
+    run.status = "running";
+    run.task = task;
+    delete run.result;
+    const child = spawn(executable, this.buildArguments(task), { stdio: ["ignore", "pipe", "pipe"], windowsHide: true });
     run.child = child;
     let stdout = "";
     let stderr = "";
@@ -55,7 +64,6 @@ export class CliAgentAdapter implements AgentAdapter {
         checks: [{ command: this.executable, exitCode: code ?? -1, summary: code === 0 ? "Process completed" : "Process failed" }],
       };
     });
-    return { runId };
   }
 
   async status(runId: string): Promise<Run["status"]> { return this.require(runId).status; }
@@ -67,8 +75,13 @@ export class CliAgentAdapter implements AgentAdapter {
     run.child?.kill("SIGTERM");
   }
 
-  async resume(): Promise<void> {
-    throw new Error(`${this.id} adapter does not support in-process resume; create a new task with resume context`);
+  async resume(runId: string, context: string): Promise<void> {
+    const run = this.require(runId);
+    if (run.status === "running") throw new Error(`Agent run is already active: ${runId}`);
+    await this.startProcess(run, {
+      ...run.task,
+      constraints: [...run.task.constraints, `Resume context: ${context}`],
+    });
   }
 
   require(runId: string): Run {
@@ -76,6 +89,19 @@ export class CliAgentAdapter implements AgentAdapter {
     if (!run) throw new Error(`Unknown agent run: ${runId}`);
     return run;
   }
+}
+
+async function resolveExecutable(name: string): Promise<string | undefined> {
+  const extensions = process.platform === "win32"
+    ? (process.env.PATHEXT ?? ".COM;.EXE;.BAT;.CMD").split(";")
+    : [""];
+  for (const directory of (process.env.PATH ?? "").split(delimiter)) {
+    for (const extension of extensions) {
+      const candidate = join(directory, process.platform === "win32" ? `${name}${extension.toLowerCase()}` : name);
+      try { await access(candidate, constants.X_OK); return candidate; } catch { continue; }
+    }
+  }
+  return undefined;
 }
 
 function sanitize(value: string): string {

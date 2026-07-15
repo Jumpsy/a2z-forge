@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { access, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -28,5 +28,26 @@ describe("StateStore recovery", () => {
     const valid = await store.readJournal();
     await writeFile(store.journalPath, `${JSON.stringify(valid[0])}\n{\"partial\":`, "utf8");
     await expect(store.readJournal()).resolves.toHaveLength(1);
+  });
+
+  it("replays state-changing task events", async () => {
+    const root = await mkdtemp(join(tmpdir(), "a2z-forge-"));
+    const store = new StateStore(root);
+    const state = createProjectState({ projectRoot: root, idea: "Build replay" });
+    await store.initialize(state);
+    await store.appendEvent({ type: "task.updated", actor: "test", payload: { taskId: "intake", patch: { status: "completed" } } });
+    const recovered = await recoverProject(root);
+    expect(recovered.tasks.find(({ id }) => id === "intake")?.status).toBe("completed");
+  });
+
+  it("removes randomized interrupted snapshots", async () => {
+    const root = await mkdtemp(join(tmpdir(), "a2z-forge-"));
+    const store = new StateStore(root);
+    const state = createProjectState({ projectRoot: root, idea: "Build cleanup" });
+    await store.initialize(state);
+    const temporary = `${store.statePath}.1234.deadbeef.tmp`;
+    await writeFile(temporary, "{", "utf8");
+    await store.removeTemporarySnapshots();
+    await expect(access(temporary)).rejects.toMatchObject({ code: "ENOENT" });
   });
 });

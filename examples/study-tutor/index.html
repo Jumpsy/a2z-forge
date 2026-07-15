@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A local study workspace that answers from uploaded material with source citations." />
+    <title>Marginalia Study Tutor</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
+    <header class="masthead">
+      <a class="wordmark" href="./" aria-label="Marginalia home">
+        <svg aria-hidden="true" viewBox="0 0 32 32"><path d="M4 5h18v22H4z"/><path d="M9 10h8M9 15h8M9 20h5"/><path d="M24 9v15M21 12h6"/></svg>
+        <span>Marginalia</span>
+      </a>
+      <p>Local evidence tutor</p>
+      <span class="privacy-note">Files stay in this browser session</span>
+    </header>
+
+    <main id="workspace" class="workspace">
+      <section class="source-panel" aria-labelledby="source-title">
+        <div class="section-heading">
+          <div>
+            <p class="kicker">Source desk</p>
+            <h1 id="source-title">Study the material, not a guess.</h1>
+          </div>
+          <span id="source-count" class="source-count" aria-live="polite">No source</span>
+        </div>
+
+        <div id="drop-zone" class="drop-zone">
+          <svg aria-hidden="true" viewBox="0 0 48 48"><path d="M8 7h23l9 9v25H8z"/><path d="M31 7v10h9M16 25h16M16 31h12"/></svg>
+          <div>
+            <strong>Choose notes or drop a file</strong>
+            <p>Plain text and Markdown, up to 2 MB.</p>
+          </div>
+          <label class="button secondary" for="source-file">Choose file</label>
+          <input id="source-file" type="file" accept=".txt,.md,text/plain,text/markdown" />
+          <button id="demo-source" class="text-button" type="button">Load the biology example</button>
+        </div>
+
+        <div id="source-error" class="notice error" role="alert" hidden></div>
+        <article id="source-content" class="source-content" tabindex="0" hidden>
+          <header>
+            <p id="source-name"></p>
+            <button id="replace-source" class="text-button" type="button">Replace source</button>
+          </header>
+          <ol id="source-lines"></ol>
+        </article>
+      </section>
+
+      <section class="tutor-panel" aria-labelledby="tutor-title">
+        <div class="tutor-heading">
+          <div>
+            <p class="kicker">Tutor desk</p>
+            <h2 id="tutor-title">Ask for an explanation</h2>
+          </div>
+          <span id="answer-status" class="answer-status">Waiting for material</span>
+        </div>
+
+        <div id="empty-tutor" class="empty-tutor">
+          <p>Load a source to unlock cited answers and review questions.</p>
+        </div>
+
+        <div id="active-tutor" hidden>
+          <div class="suggestions" aria-label="Suggested questions">
+            <button type="button" data-question="What is the main idea?">Main idea</button>
+            <button type="button" data-question="Explain the most important process.">Explain a process</button>
+            <button type="button" data-question="What should I remember for a test?">Test review</button>
+          </div>
+
+          <div id="conversation" class="conversation" aria-live="polite" aria-relevant="additions"></div>
+
+          <form id="question-form" class="composer">
+            <label for="question">Question about this source</label>
+            <div>
+              <textarea id="question" rows="2" maxlength="500" placeholder="Ask about a concept in your notes" required></textarea>
+              <button class="button primary" type="submit">Find an answer</button>
+            </div>
+          </form>
+
+          <section class="review" aria-labelledby="review-title">
+            <div>
+              <p class="kicker">Retrieval check</p>
+              <h3 id="review-title">One question from your notes</h3>
+            </div>
+            <button id="new-review" class="text-button" type="button">New question</button>
+            <div id="review-card" class="review-card"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>A functional A2Z FORGE reference product. Answers use lexical retrieval, not a hosted model.</p>
+    </footer>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
