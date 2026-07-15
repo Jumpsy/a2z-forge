@@ -2,14 +2,13 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "a2z-forge",
   "displayName": "A2Z FORGE",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An autonomous product foundry for Claude Code and compatible coding agents.",
   "author": {
     "name": "A2Z FORGE contributors"
   },
   "license": "MIT",
   "keywords": ["product-development", "orchestration", "research", "design", "quality"],
-  "hooks": "./hooks/hooks.json",
   "defaultEnabled": true,
   "userConfig": {
     "permission_mode": {

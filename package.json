@@ -1,6 +1,6 @@
 {
   "name": "a2z-forge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An autonomous product foundry for Claude Code and compatible coding agents.",
   "type": "module",
   "private": true,

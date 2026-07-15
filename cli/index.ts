@@ -3,6 +3,7 @@ import { access, mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 import { spawn } from "node:child_process";
 import { createProjectState } from "../core/project.js";
+import { initializeBlueprint } from "../core/blueprint.js";
 import { recoverProject } from "../core/recovery/recover.js";
 import { StateStore } from "../core/state-store.js";
 import { TaskGraph } from "../core/task-graph/task-graph.js";
@@ -55,6 +56,7 @@ async function initialize(args: string[]): Promise<void> {
   }
   const state = createProjectState({ projectRoot: root, idea, permissionMode });
   await store.initialize(state);
+  await initializeBlueprint(store.directory, state);
   process.stdout.write(`${JSON.stringify({ ok: true, projectId: state.projectId, statePath: store.statePath }, null, 2)}\n`);
 }
 

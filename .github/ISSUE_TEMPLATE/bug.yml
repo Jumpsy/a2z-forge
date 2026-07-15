@@ -1,0 +1,24 @@
+name: Bug report
+description: Report reproducible incorrect behavior
+body:
+  - type: textarea
+    id: defect
+    attributes:
+      label: Defect
+      description: What happened and what should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide the smallest safe reproduction and relevant versions.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Include redacted logs, tests, or artifact paths. Never include secrets.
+    validations:
+      required: true

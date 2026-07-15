@@ -11,7 +11,7 @@
       "name": "a2z-forge",
       "source": "./plugin",
       "description": "Idea in. Production out. Research, design, build, critique, test, explain, and ship through one coordinated system.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "category": "development",
       "tags": ["product-development", "orchestration", "research", "quality"]
     }

@@ -42,6 +42,7 @@ Key compatibility decisions:
 - Claude plugin skills are namespaced, so the canonical invocation is `/a2z-forge:forge`. The installer may additionally create explicit standalone wrappers only with the user's authorization.
 - Plugin-shipped agents cannot declare `hooks`, `mcpServers`, or `permissionMode` in agent frontmatter.
 - Hook scripts use `${CLAUDE_PLUGIN_ROOT}` because marketplace plugins run from a cache.
+- Default plugin component directories must not also be declared in the manifest. Claude Code treats a repeated `hooks/hooks.json` path as a duplicate at live load time even when strict manifest validation passes.
 - Skills use progressive disclosure and keep detailed schemas in references rather than one large prompt.
 - Marketplace and plugin manifests are validated with Claude Code's own validator.
 

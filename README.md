@@ -29,6 +29,14 @@ node dist/cli/index.js checkpoint --path /tmp/forge-demo
 node dist/cli/index.js recover --path /tmp/forge-demo
 ```
 
+## Install
+
+```bash
+./installers/install.sh
+```
+
+Restart Claude Code and invoke `/a2z-forge:forge <idea>`. Plugin skills are namespaced by Claude Code; see [installation details](docs/INSTALLATION.md).
+
 ## Status
 
 See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) and [docs/ENVIRONMENT_REPORT.md](docs/ENVIRONMENT_REPORT.md). The Claude plugin, full adapter set, dashboard, and reference application are not yet claimed complete.

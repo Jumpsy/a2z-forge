@@ -18,7 +18,7 @@ updated PROJECT_STATE.json and TASK_GRAPH.json; current recommendation; next exe
 
 ## Workflow
 
-Load or initialize state. Resolve prior answers. Run intake only for material unknowns. Select the smallest valuable critical path. Delegate bounded work to required roles. Keep one productive task active. Checkpoint every milestone.
+Check whether `.forge/PROJECT_STATE.json` exists. If absent, run `forge init --path <project-root> --idea <idea>` with the user's idea passed as a single argument. If present, run `forge recover --path <project-root>`. Resolve prior answers. Run intake only for material unknowns. Select the smallest valuable critical path. Delegate bounded work to required roles. Keep one productive task active. Checkpoint every milestone.
 
 Honor the current permission mode. Use only task-relevant tools and installed skills. Log consequential actions. Persist outputs before reporting success.
 

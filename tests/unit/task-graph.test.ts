@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { TaskGraph } from "../../core/task-graph/task-graph.js";
 import type { Task } from "../../core/shared/schemas.js";
+import { createProjectState } from "../../core/project.js";
 
 const now = new Date().toISOString();
 const task = (id: string, dependencies: string[] = [], estimatedUsage = 1): Task => ({
@@ -45,5 +46,12 @@ describe("TaskGraph", () => {
       task("release", ["short", "long"], 1),
     ]);
     expect(graph.criticalPath()).toEqual(["root", "long", "release"]);
+  });
+
+  it("initializes a real product workflow with intake ready", () => {
+    const state = createProjectState({ projectRoot: "/tmp/example", idea: "Build a study tutor" });
+    const graph = new TaskGraph(state.tasks);
+    expect(graph.ready().map(({ id }) => id)).toEqual(["intake"]);
+    expect(graph.criticalPath()).toEqual(["intake", "research", "goal", "plan", "build", "review", "demo", "ship"]);
   });
 });
