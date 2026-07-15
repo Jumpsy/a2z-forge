@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "demo": true,
+  "projectId": "demo-a2z-forge",
+  "productName": "A2Z FORGE demo project",
+  "idea": "Create a local product workflow that preserves evidence and survives interruption.",
+  "goal": "Demonstrate task, evidence, review, usage, and recovery state without claiming a production release.",
+  "milestone": "Recoverable orchestration foundation",
+  "permissionMode": "build",
+  "status": "review",
+  "createdAt": "2026-07-15T12:00:00.000Z",
+  "updatedAt": "2026-07-15T15:45:00.000Z",
+  "lastJournalSequence": 42,
+  "tasks": [
+    {"id":"intake","title":"Resolve product constraints","objective":"Capture only material unknowns and persist every answer.","status":"completed","dependencies":[],"acceptanceCriteria":["No known answer is requested twice."],"estimatedUsage":1,"actualUsage":0.7,"risk":"low","resumeInstructions":"Review INTAKE.json before asking another question."},
+    {"id":"research","title":"Build the evidence base","objective":"Record decision-relevant sources, confidence, staleness, and licenses.","status":"completed","dependencies":["intake"],"acceptanceCriteria":["Every major claim links to a source record."],"estimatedUsage":3,"actualUsage":2.4,"risk":"medium","resumeInstructions":"Open EVIDENCE.jsonl and continue unresolved questions."},
+    {"id":"plan","title":"Set architecture and critical path","objective":"Choose the smallest maintainable architecture and an acyclic task graph.","status":"completed","dependencies":["research"],"acceptanceCriteria":["The graph is acyclic.","Every task has a measurable output."],"estimatedUsage":2,"actualUsage":1.5,"risk":"medium","resumeInstructions":"Recompute the critical path after scope changes."},
+    {"id":"build","title":"Implement recoverable state","objective":"Write atomic snapshots, append-only journal events, and task orchestration.","status":"completed","dependencies":["plan"],"acceptanceCriteria":["Forced interruption recovery passes.","State writes are atomic."],"estimatedUsage":5,"actualUsage":4.3,"risk":"high","resumeInstructions":"Run the recovery suite before further state changes."},
+    {"id":"review","title":"Close adversarial findings","objective":"Reproduce, fix, and regression-test evidence-backed review findings.","status":"in-progress","dependencies":["build"],"owner":"adversarial-critic","acceptanceCriteria":["Every high finding is fixed or explicitly waived."],"estimatedUsage":3,"actualUsage":1.2,"risk":"high","resumeInstructions":"Continue from finding F5, then rerun all tests."},
+    {"id":"ship","title":"Run release gates","objective":"Publish only when the central journey and required quality checks have evidence.","status":"pending","dependencies":["review"],"acceptanceCriteria":["No critical blocker remains.","Rollback and handoff exist."],"estimatedUsage":2,"actualUsage":0,"risk":"critical","resumeInstructions":"Do not start until review is complete."}
+  ],
+  "agents": [
+    {"id":"critic-1","adapter":"opencode","status":"working","taskId":"review","lastHeartbeatAt":"2026-07-15T15:44:30.000Z","usageObserved":0,"usageEstimated":1.2}
+  ],
+  "findings": [
+    {"id":"demo-f1","artifact":"adapter portability","defect":"Windows executable resolution needs verification.","evidence":"Cross-platform integration is not yet recorded.","severity":"medium","impact":"An adapter may fail to start on Windows.","fix":"Run the adapter fixture on Windows CI.","verification":"Windows CI reports start, result, stop, and resume.","confidence":0.85,"blocksRelease":false,"status":"open"}
+  ],
+  "evidence": [
+    {"id":"ev-1","source":"tests/recovery/state-store.test.ts","retrievedAt":"2026-07-15T15:40:00.000Z","summary":"Forced interruption and journal replay tests pass.","confidence":1,"kind":"test","supports":["recoverable-state"]},
+    {"id":"ev-2","source":"claude plugin list","retrievedAt":"2026-07-15T15:39:00.000Z","summary":"Local Claude installation reports the plugin enabled.","confidence":1,"kind":"test","supports":["plugin-installation"]}
+  ],
+  "usage": {"observedTokens":0,"estimatedTokens":12100,"observedCostUsd":0,"estimatedCostUsd":0,"reservePercent":20,"updatedAt":"2026-07-15T15:45:00.000Z"},
+  "decisions": ["This fixture is demo data and is not a release claim."],
+  "qualityHistory": [55, 67, 76, 84]
+}

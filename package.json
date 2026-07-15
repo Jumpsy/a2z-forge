@@ -13,6 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "dev": "tsx cli/index.ts",
+    "dashboard": "node dashboard/server.mjs",
     "doctor": "tsx cli/index.ts doctor",
     "validate:plugin": "claude plugin validate .",
     "secret-scan": "bash scripts/secret-scan.sh"

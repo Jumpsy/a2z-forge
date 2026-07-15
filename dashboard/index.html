@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Local A2Z FORGE task, evidence, agent, usage, checkpoint, and release dashboard." />
+    <title>A2Z FORGE Control Room</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#task-flow">Skip to task flow</a>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="A2Z FORGE dashboard home">
+        <svg aria-hidden="true" viewBox="0 0 40 40"><path d="M5 6h13v13H5zM22 6h13v13H22zM5 23h13v11H5zM22 23h13v11H22z"/><path d="m9 15 5-5m12 0 5 5M9 29h5m12 0h5"/></svg>
+        <span>A2Z <b>FORGE</b></span>
+      </a>
+      <div class="project-identity">
+        <span id="data-label">Loading state</span>
+        <strong id="project-name">Control Room</strong>
+      </div>
+      <div class="clock-block">
+        <span>Checkpoint</span>
+        <strong id="checkpoint">Unknown</strong>
+      </div>
+    </header>
+
+    <main>
+      <section class="mission" aria-labelledby="mission-title">
+        <div>
+          <p class="eyebrow">Current objective</p>
+          <h1 id="mission-title">Reading project state</h1>
+          <p id="project-idea" class="project-idea"></p>
+        </div>
+        <dl class="mission-meta">
+          <div><dt>Milestone</dt><dd id="milestone">Unknown</dd></div>
+          <div><dt>Mode</dt><dd id="permission-mode">Unknown</dd></div>
+          <div><dt>Release</dt><dd id="release-status">Unknown</dd></div>
+        </dl>
+      </section>
+
+      <section id="task-flow" class="task-area" aria-labelledby="task-title">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Execution map</p>
+            <h2 id="task-title">Critical path and dependencies</h2>
+          </div>
+          <p>Use arrow keys to move between tasks. Press Enter for evidence and recovery details.</p>
+        </div>
+        <div class="flow-shell">
+          <div id="task-list" class="task-list" role="list" aria-label="Project tasks"></div>
+          <aside id="task-detail" class="task-detail" aria-labelledby="detail-title">
+            <p class="eyebrow">Selected task</p>
+            <h3 id="detail-title">Select a task</h3>
+            <p id="detail-objective">Task evidence and acceptance criteria appear here.</p>
+            <dl>
+              <div><dt>Status</dt><dd id="detail-status">Unknown</dd></div>
+              <div><dt>Owner</dt><dd id="detail-owner">Unassigned</dd></div>
+              <div><dt>Risk</dt><dd id="detail-risk">Unknown</dd></div>
+              <div><dt>Usage</dt><dd id="detail-usage">Unknown</dd></div>
+            </dl>
+            <h4>Acceptance</h4>
+            <ul id="detail-acceptance"></ul>
+            <h4>Resume</h4>
+            <p id="detail-resume" class="code-line"></p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="operations" aria-label="Operations and evidence">
+        <div class="agent-rail">
+          <div class="section-title compact">
+            <div><p class="eyebrow">Workers</p><h2>Agent leases</h2></div>
+            <span id="agent-count">0 active</span>
+          </div>
+          <div id="agent-list" class="agent-list"></div>
+        </div>
+
+        <div class="evidence-ledger">
+          <div class="section-title compact">
+            <div><p class="eyebrow">Proof</p><h2>Evidence ledger</h2></div>
+            <span id="evidence-count">0 records</span>
+          </div>
+          <ol id="evidence-list"></ol>
+        </div>
+
+        <div class="usage-block">
+          <div class="section-title compact">
+            <div><p class="eyebrow">Capacity</p><h2>Usage reserve</h2></div>
+            <span id="usage-kind">Estimated</span>
+          </div>
+          <div class="usage-rule" aria-hidden="true"><span id="usage-fill"></span><i id="reserve-marker"></i></div>
+          <p id="usage-copy"></p>
+          <div class="quality-history">
+            <h3>Quality history</h3>
+            <svg id="quality-chart" viewBox="0 0 320 90" role="img" aria-labelledby="quality-title quality-desc">
+              <title id="quality-title">Quality history</title>
+              <desc id="quality-desc">No quality history loaded.</desc>
+              <polyline id="quality-line" points="" />
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section class="release-gate" aria-labelledby="gate-title">
+        <div class="gate-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div>
+          <p class="eyebrow">Release gate</p>
+          <h2 id="gate-title">Evaluating</h2>
+          <p id="gate-copy">Required checks and open evidence-backed findings determine release status.</p>
+        </div>
+        <ul id="blocking-list"></ul>
+      </section>
+
+      <div id="load-error" class="load-error" role="alert" hidden>
+        <strong>Project state could not be loaded.</strong>
+        <p>Serve this directory over HTTP and verify `project-state.json` is readable.</p>
+      </div>
+    </main>
+
+    <footer>
+      <span>A2Z FORGE local control plane</span>
+      <span id="updated-at">No state loaded</span>
+    </footer>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
